@@ -6,12 +6,14 @@ import { useLocation } from "react-router-dom";
 import InfoBar from "../InfoBar/InfoBar";
 import Input from "../Input/Input";
 import Messages from "../Messages/Messages";
+import TextContainer from "../TextContainer/TextContainer";
 let socket;
 
 function Chat() {
   const location = useLocation();
   const [name, setName] = useState();
   const [room, setRoom] = useState();
+  const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const ENDPOINT = "https://chat-application-backend-ee4l.onrender.com/"||"http://localhost:5000";
@@ -32,7 +34,10 @@ function Chat() {
     socket.on("message", (message) => {
       setMessages([...messages, message]);
     });
-  }, [messages]);
+    socket.on('roomData',({ users })=>{
+      setUsers(users);
+    })
+  }, []);
 
   const sendMessage=(e)=>{
       e.preventDefault();
@@ -49,6 +54,7 @@ function Chat() {
         <Messages messages={messages} name={name}/>
         <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
       </div>
+      <TextContainer users={users}/>
     </div>
   );
 }
