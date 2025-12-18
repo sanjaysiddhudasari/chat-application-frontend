@@ -6,7 +6,8 @@ function Message({ message,name }) {
 
   let isSentByCurrentUser=false;
   const trimmedName=name.trim().toLowerCase();
-  const {user,text}=message;
+  const {user,text,date}=message;
+  const ndate=new Date(date);
 
   if(user===trimmedName){
     isSentByCurrentUser=true;
@@ -23,6 +24,7 @@ function Message({ message,name }) {
                 <p className='messageText colorWhite'>
                     {ReactEmoji.emojify(text)}
                 </p>
+                <p className='messageText colorWhite'>{ndate.toLocaleTimeString('en-US')}</p>
             </div>
         </div>
     ):
@@ -32,6 +34,7 @@ function Message({ message,name }) {
                 <p className='messageText colorDark'>
                     {ReactEmoji.emojify(text)}
                 </p>
+                <p className='messageText colorDark'>{ndate.toLocaleTimeString('en-US')}</p>
             </div>
             <p className='sentText pl-10'>
                 {user}
