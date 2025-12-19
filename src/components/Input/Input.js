@@ -1,7 +1,7 @@
 import React from 'react'
 import './Input.css';
 
-function Input({message,setMessage,sendMessage}) {
+function Input({message,setMessage,sendMessage,socket,room,name}) {
   return (
    <form className='form'>
         <input
@@ -9,7 +9,10 @@ function Input({message,setMessage,sendMessage}) {
             type='text'
             placeholder='type a message'
             value={message}
-            onChange={(e)=>setMessage(e.target.value)}
+            onChange={(e)=>{
+              setMessage(e.target.value);
+              socket.emit('typing:start',{room,name});
+            }}
             onKeyDown={e=>e.key==='Enter'?sendMessage(e):null}
         />
         <button className='sendButton' onClick={(event)=>sendMessage(event)}>Send</button>
