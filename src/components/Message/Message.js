@@ -6,8 +6,8 @@ function Message({ message,name }) {
 
   let isSentByCurrentUser=false;
   const trimmedName=name.trim().toLowerCase();
-  const {user,text,date}=message;
-  const ndate=new Date(date);
+  const {user,text,createdAt}=message;
+  const ndate=new Date(createdAt);
 
   if(user===trimmedName){
     isSentByCurrentUser=true;
