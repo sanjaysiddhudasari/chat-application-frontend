@@ -21,7 +21,7 @@ function Chat() {
   const ENDPOINT =
   process.env.NODE_ENV === "production"
     ? "https://chat-application-backend-ee4l.onrender.com"
-    : "http://localhost:5000";
+    : "http://localhost:5000";  
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
     socket = io(ENDPOINT);
@@ -37,12 +37,12 @@ function Chat() {
 
   useEffect(() => {
     socket.on("message", (message) => {
-      setMessages([...messages, message]);
+      setMessages((prevMessages)=>[...prevMessages,message]);
     });
     socket.on('roomData',({ users })=>{
       setUsers(users);
     })
-  }, [messages]);
+  }, []);
 
   // for typing state
 
