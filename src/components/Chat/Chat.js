@@ -18,6 +18,8 @@ function Chat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [typingUsers,setTypingUsers]=useState([]);
+  const [isLoadingHistory,setIsLoadingHistory]=useState(false);
+  const [hasMore,setHasMore]=useState(true);
   const ENDPOINT =
   process.env.NODE_ENV === "production"
     ? "https://chat-application-backend-ee4l.onrender.com"
@@ -55,6 +57,20 @@ function Chat() {
     }
   },[]);
 
+  //for reciving older messages
+  useEffect(()=>{
+    socket.on('olderMessages',(olderMessages)=>{
+      if(olderMessages.length===0){
+          setHasMore(false);
+      }else{
+        setMessages((prev)=>[...olderMessages,...prev]);
+      }
+      setIsLoadingHistory(false);
+    })
+    return ()=>{
+      socket.off('olderMessages');
+    }
+  },[])
 
   const sendMessage=(e)=>{
       e.preventDefault();
@@ -63,13 +79,13 @@ function Chat() {
         socket.emit('sendMessage',message,()=>setMessage(''));
       }
   }
-  console.log(message,messages);
+  console.log(messages);
 
   return (
     <div className="outerContainer">
       <div className="container">
         <InfoBar room={room}/>
-        <Messages messages={messages} name={name}/>
+        <Messages messages={messages} name={name} isLoadingHistory={isLoadingHistory} setIsLoadingHistory ={setIsLoadingHistory} socket={socket} room={room} hasMore={hasMore}/>
         <Typing typingUsers={typingUsers} room={room} name={name} />
         <Input message={message} setMessage={setMessage} sendMessage={sendMessage} socket={socket} room={room} name={name} />
       </div>
