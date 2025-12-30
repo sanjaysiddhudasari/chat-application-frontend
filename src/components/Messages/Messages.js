@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import ScrollToBottom, { useSticky, useAtTop } from 'react-scroll-to-bottom'
+import React, { useEffect,useRef } from 'react'
 import './Messages.css'
 import Message from '../Message/Message'
 
@@ -7,22 +6,39 @@ import Message from '../Message/Message'
 
 function Messages({ messages, name, room, isLoadingHistory, setIsLoadingHistory, socket, hasMore }) {
 
-  const atTop = useAtTop();
-  const [sticky]=useSticky();
-  useEffect(() => {
-    if(sticky)return;
-    if (atTop && !isLoadingHistory &&
-      hasMore &&
-      messages.length > 0) {
+  const containerRef=useRef(null);
+  const prevScrollHeightRef = useRef(0);
+  const justPrependedRef = useRef(false);
+
+  //load more messages
+  const handleScroll=()=>{
+    const el=containerRef.current;
+    if(!el||messages.length===0)return;
+    if(el.scrollTop<=10&&!isLoadingHistory&&hasMore){
       setIsLoadingHistory(true);
-      const oldestMessage = messages[0];
-      socket.emit('loadMoreMessages', { room: room, cursor: oldestMessage.createdAt });
+      justPrependedRef.current=true;  
+      prevScrollHeightRef.current=el.scrollHeight;
+      socket.emit('loadMoreMessages',{room,cursor:messages[0].createdAt});
     }
-  }, [atTop,sticky]);
+  }
+
+  //auto scrolling feature
+  useEffect(()=>{
+    const el=containerRef.current;
+    if(!el)return;
+    if(justPrependedRef.current){
+      const diff=el.scrollHeight-prevScrollHeightRef.current;
+      el.scrollTop=diff;
+      justPrependedRef.current=false;
+    }else{
+      el.scrollTop=el.scrollHeight;
+    }
+  },[messages]);
+
   return (
-    <ScrollToBottom className='messages' mode={isLoadingHistory ? 'top' : 'bottom'}>
+    <div className='messages' ref={containerRef} style={{height:"400px",overflowY:"auto"}} onScroll={handleScroll}>
       {messages.map((message, i) => <div key={i}><Message message={message} name={name} /></div>)}
-    </ScrollToBottom>
+    </div>
   )
 }
 
