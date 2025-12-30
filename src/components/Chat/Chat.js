@@ -8,6 +8,7 @@ import Input from "../Input/Input";
 import Messages from "../Messages/Messages";
 import TextContainer from "../TextContainer/TextContainer";
 import Typing from "../Typing/Typing";
+import Loader from '../Loader'
 let socket;
 
 function Chat() {
@@ -18,6 +19,7 @@ function Chat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [typingUsers,setTypingUsers]=useState([]);
+  const [isLoading,setIsLoading]=useState(true);
   const ENDPOINT =
   process.env.NODE_ENV === "production"
     ? "https://chat-application-backend-ee4l.onrender.com"
@@ -56,6 +58,14 @@ function Chat() {
   },[]);
 
 
+  //loading state
+
+  useEffect(()=>{
+    if(messages.length>0){
+      setIsLoading(false);
+    }
+  },[messages]);
+
   const sendMessage=(e)=>{
       e.preventDefault();
       if(message){
@@ -66,7 +76,8 @@ function Chat() {
   console.log(message,messages);
 
   return (
-    <div className="outerContainer">
+    isLoading?(<Loader/>):
+    (<div className="outerContainer">
       <div className="container">
         <InfoBar room={room}/>
         <Messages messages={messages} name={name}/>
@@ -74,7 +85,7 @@ function Chat() {
         <Input message={message} setMessage={setMessage} sendMessage={sendMessage} socket={socket} room={room} name={name} />
       </div>
       <TextContainer users={users}/>
-    </div>
+    </div>)
   );
 }
 
