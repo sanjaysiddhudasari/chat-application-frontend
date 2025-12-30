@@ -59,6 +59,15 @@ function Chat() {
     }
   },[]);
 
+
+  //loading state
+
+  useEffect(()=>{
+    if(messages.length>0){
+      setIsLoading(false);
+    }
+  },[messages]);
+
   //for reciving older messages
   useEffect(()=>{
     socket.on('olderMessages',(olderMessages)=>{
