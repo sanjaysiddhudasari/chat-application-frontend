@@ -20,6 +20,7 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [typingUsers,setTypingUsers]=useState([]);
   const [isLoadingHistory,setIsLoadingHistory]=useState(false);
+  const [isLoading,setIsLoading]=useState(true);
   const [hasMore,setHasMore]=useState(true);
   const ENDPOINT =
   process.env.NODE_ENV === "production"
