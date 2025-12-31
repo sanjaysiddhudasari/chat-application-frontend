@@ -1,5 +1,24 @@
 .messages {
   padding: 5% 0;
-  overflow: auto;
-  flex: auto;
+  height: 400px;
+  overflow-y: auto;
+  position: relative;
 }
+
+
+.scrollDownBtn {
+  position: sticky;  /* more reliable for floating button */
+  bottom: 16px;
+  right: 16px;
+  z-index: 10;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.scrollDownBtn img {
+  height: 10px;
+}
+

@@ -1,6 +1,7 @@
-import React, { useEffect,useRef } from 'react'
+import React, { useEffect,useRef, useState } from 'react'
 import './Messages.css'
 import Message from '../Message/Message'
+import downIcon from '../../icons/arrow-down-solid-full.svg'
 
 
 
@@ -9,6 +10,7 @@ function Messages({ messages, name, room, isLoadingHistory, setIsLoadingHistory,
   const containerRef=useRef(null);
   const prevScrollHeightRef = useRef(0);
   const justPrependedRef = useRef(false);
+  const [isShowDown,setIsShowDown]=useState(false);
 
   //load more messages
   const handleScroll=()=>{
@@ -20,6 +22,9 @@ function Messages({ messages, name, room, isLoadingHistory, setIsLoadingHistory,
       prevScrollHeightRef.current=el.scrollHeight;
       socket.emit('loadMoreMessages',{room,cursor:messages[0].createdAt});
     }
+    const threshold = 40;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setIsShowDown(distanceFromBottom > threshold);
   }
 
   //auto scrolling feature
@@ -35,9 +40,16 @@ function Messages({ messages, name, room, isLoadingHistory, setIsLoadingHistory,
     }
   },[messages]);
 
+  const handleClick=()=>{
+    const el=containerRef.current;
+    if(!el)return ;
+    el.scrollTo({top:el.scrollHeight,behavior:'smooth'})
+  }
+
   return (
-    <div className='messages' ref={containerRef} style={{height:"400px",overflowY:"auto"}} onScroll={handleScroll}>
+    <div className='messages' ref={containerRef} onScroll={handleScroll}>
       {messages.map((message, i) => <div key={i}><Message message={message} name={name} /></div>)}
+      {isShowDown&&(<button className='scrollDownBtn' onClick={handleClick}> <img src={downIcon}/> </button> )}   
     </div>
   )
 }
