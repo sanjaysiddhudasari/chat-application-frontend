@@ -20,12 +20,12 @@ function Chat() {
   const [isLoadingHistory,setIsLoadingHistory]=useState(false);
   const [isLoading,setIsLoading]=useState(true);
   const [hasMore,setHasMore]=useState(true);
+  const { name, setName,room,setRoom } = useContext(ChatContext)
   const ENDPOINT =
   process.env.NODE_ENV === "production"
     ? "https://chat-application-backend-ee4l.onrender.com"
     : "http://localhost:5000";  
   useEffect(() => {
-    const { name, setName,room,setRoom } = useContext(ChatContext)//here
     socket = io(ENDPOINT);
     setName(name);
     setRoom(room);
@@ -35,7 +35,7 @@ function Chat() {
       socket.disconnect();
       socket.off();
     };
-  }, [location.search, ENDPOINT]);//here
+  }, [ENDPOINT]);//here
 
   useEffect(() => {
     socket.on("message", (message) => {

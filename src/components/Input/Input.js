@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import './Input.css';
 import { ChatContext } from '../../context/ChatContext';
 
 function Input({message,setMessage,sendMessage,socket}) {
-  const {name,room}=useState(ChatContext)
+  const {name,room}=useContext(ChatContext)
   return (
    <form className='form'>
         <input

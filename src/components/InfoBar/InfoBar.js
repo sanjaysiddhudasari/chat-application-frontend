@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import './InfoBar.css'
 import { Link } from 'react-router-dom'
 import onlineIcon from '../../icons/onlineIcon.png'
