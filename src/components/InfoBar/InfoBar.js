@@ -3,8 +3,10 @@ import './InfoBar.css'
 import { Link } from 'react-router-dom'
 import onlineIcon from '../../icons/onlineIcon.png'
 import closeIcon from '../../icons/closeIcon.png'
+import { ChatContext } from '../../context/ChatContext'
 
-function InfoBar({room}) {
+function InfoBar() {
+  const { room} = useContext(ChatContext)
   return (
     <div className='infoBar'>
         <div className='leftInnerContainer'>

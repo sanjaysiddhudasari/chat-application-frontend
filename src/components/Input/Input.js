@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Input.css';
+import { ChatContext } from '../../context/ChatContext';
 
-function Input({message,setMessage,sendMessage,socket,room,name}) {
+function Input({message,setMessage,sendMessage,socket}) {
+  const {name,room}=useState(ChatContext)
   return (
    <form className='form'>
         <input

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import queryString from "query-string";
 import io from "socket.io-client";
 import "./Chat.css";
@@ -9,12 +9,10 @@ import Messages from "../Messages/Messages";
 import TextContainer from "../TextContainer/TextContainer";
 import Typing from "../Typing/Typing";
 import Loader from '../Loader'
+import { ChatContext } from "../../context/ChatContext";
 let socket;
 
 function Chat() {
-  const location = useLocation();
-  const [name, setName] = useState();
-  const [room, setRoom] = useState();
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -27,7 +25,7 @@ function Chat() {
     ? "https://chat-application-backend-ee4l.onrender.com"
     : "http://localhost:5000";  
   useEffect(() => {
-    const { name, room } = queryString.parse(location.search);
+    const { name, setName,room,setRoom } = useContext(ChatContext)//here
     socket = io(ENDPOINT);
     setName(name);
     setRoom(room);
@@ -37,7 +35,7 @@ function Chat() {
       socket.disconnect();
       socket.off();
     };
-  }, [location.search, ENDPOINT]);
+  }, [location.search, ENDPOINT]);//here
 
   useEffect(() => {
     socket.on("message", (message) => {
@@ -96,10 +94,10 @@ function Chat() {
     isLoading?(<Loader/>):
     (<div className="outerContainer">
       <div className="container">
-        <InfoBar room={room}/>
-        <Messages messages={messages} name={name} isLoadingHistory={isLoadingHistory} setIsLoadingHistory ={setIsLoadingHistory} socket={socket} room={room} hasMore={hasMore}/>
-        <Typing typingUsers={typingUsers} room={room} name={name} />
-        <Input message={message} setMessage={setMessage} sendMessage={sendMessage} socket={socket} room={room} name={name} />
+        <InfoBar />
+        <Messages messages={messages}  isLoadingHistory={isLoadingHistory} setIsLoadingHistory ={setIsLoadingHistory} socket={socket} hasMore={hasMore}/>
+        <Typing typingUsers={typingUsers} />
+        <Input message={message} setMessage={setMessage} sendMessage={sendMessage} socket={socket} />
       </div>
       <TextContainer users={users}/>
     </div>)

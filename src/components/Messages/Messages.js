@@ -1,12 +1,13 @@
-import React, { useEffect,useRef, useState } from 'react'
+import React, { useContext, useEffect,useRef, useState } from 'react'
 import './Messages.css'
 import Message from '../Message/Message'
 import downIcon from '../../icons/arrow-down-solid-full.svg'
+import { ChatContext } from '../../context/ChatContext'
 
 
 
-function Messages({ messages, name, room, isLoadingHistory, setIsLoadingHistory, socket, hasMore }) {
-
+function Messages({ messages, isLoadingHistory, setIsLoadingHistory, socket, hasMore }) {
+  const {name,room}=useContext(ChatContext)
   const containerRef=useRef(null);
   const prevScrollHeightRef = useRef(0);
   const justPrependedRef = useRef(false);

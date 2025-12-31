@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { ChatContext } from '../../context/ChatContext';
 
-function Typing({typingUsers,room,name}) {
+function Typing({typingUsers}) {
+    const {name,room}=useContext(ChatContext)
     const usersInRoom = typingUsers.filter(
     (user) => user.room === room&&user.name!==name
   );

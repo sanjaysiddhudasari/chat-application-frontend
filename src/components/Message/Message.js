@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import './Message.css'
 import ReactEmoji from 'react-emoji';
+import { ChatContext } from '../../context/ChatContext';
 
-function Message({ message,name }) {
+function Message({ message }) {
 
+  const {name}=useContext(ChatContext)
   let isSentByCurrentUser=false;
   const trimmedName=name.trim().toLowerCase();
   const {user,text,createdAt}=message;
